@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Schulturnier</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <span></span>
+        </div>
+        <div>
+          <p>Schule</p>
+          <h1>Turnier-Zentrale</h1>
+        </div>
+      </div>
+      <div class="admin-panel">
+        <span id="adminState" class="status-pill">Zuschauer</span>
+        <button id="adminToggle" class="icon-button" type="button" aria-label="Admin anmelden" title="Admin anmelden">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l7 4v5c0 5-3 9-7 11-4-2-7-6-7-11V6l7-4z"></path><path d="M9.5 12.5l1.7 1.7 3.8-4"></path></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="app-shell">
+      <section class="hero-band">
+        <div class="hero-copy">
+          <h2>Schulturnier</h2>
+          <p>Klassen eintragen, Spiele planen, Tore verwalten.</p>
+        </div>
+        <div class="scoreboard" aria-label="Turnierstand">
+          <div>
+            <span id="teamCount">0</span>
+            <small>Klassen</small>
+          </div>
+          <div>
+            <span id="matchCount">0</span>
+            <small>Spiele</small>
+          </div>
+          <div>
+            <span id="playedCount">0</span>
+            <small>fertig</small>
+          </div>
+        </div>
+      </section>
+
+      <nav class="tabs" aria-label="Bereiche">
+        <button class="tab active" type="button" data-view="games">Spiele</button>
+        <button class="tab" type="button" data-view="table">Tabelle</button>
+        <button class="tab" type="button" data-view="teams">Klassen</button>
+        <button class="tab" type="button" data-view="settings">Daten</button>
+      </nav>
+
+      <section id="games" class="view active" aria-labelledby="gamesTitle">
+        <div class="section-head">
+          <div>
+            <p>Spielplan</p>
+            <h3 id="gamesTitle">Spiele</h3>
+          </div>
+          <button id="newMatchButton" class="primary-action admin-only" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+            Spiel
+          </button>
+        </div>
+        <form id="matchForm" class="form-grid admin-only hidden" autocomplete="off">
+          <label>
+            Team A
+            <select id="matchTeamA" required></select>
+          </label>
+          <label>
+            Team B
+            <select id="matchTeamB" required></select>
+          </label>
+          <label>
+            Zeit
+            <input id="matchTime" type="text" placeholder="09:30">
+          </label>
+          <button class="primary-action" type="submit">Anlegen</button>
+        </form>
+        <div id="matchesList" class="match-list"></div>
+      </section>
+
+      <section id="table" class="view" aria-labelledby="tableTitle">
+        <div class="section-head">
+          <div>
+            <p>Rangliste</p>
+            <h3 id="tableTitle">Tabelle</h3>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Platz</th>
+                <th>Klasse</th>
+                <th>Sp</th>
+                <th>S</th>
+                <th>U</th>
+                <th>N</th>
+                <th>Tore</th>
+                <th>Diff</th>
+                <th>Pkt</th>
+              </tr>
+            </thead>
+            <tbody id="standingsBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="teams" class="view" aria-labelledby="teamsTitle">
+        <div class="section-head">
+          <div>
+            <p>Teilnehmer</p>
+            <h3 id="teamsTitle">Klassen</h3>
+          </div>
+        </div>
+        <form id="teamForm" class="form-grid admin-only" autocomplete="off">
+          <label>
+            Klasse
+            <input id="teamName" type="text" placeholder="8a" maxlength="24" required>
+          </label>
+          <label>
+            Farbe
+            <input id="teamColor" type="color" value="#2563eb">
+          </label>
+          <button class="primary-action" type="submit">Hinzufuegen</button>
+        </form>
+        <div id="teamsList" class="team-grid"></div>
+      </section>
+
+      <section id="settings" class="view" aria-labelledby="settingsTitle">
+        <div class="section-head">
+          <div>
+            <p>Speicher</p>
+            <h3 id="settingsTitle">Daten</h3>
+          </div>
+        </div>
+        <div class="tools">
+          <button id="demoData" class="tool-button admin-only" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4z"></path><path d="M8 9h8M8 13h5"></path></svg>
+            Demo laden
+          </button>
+          <button id="exportData" class="tool-button" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"></path><path d="M8 11l4 4 4-4"></path><path d="M5 19h14"></path></svg>
+            Export
+          </button>
+          <label class="tool-button import-button admin-only">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21V9"></path><path d="M8 13l4-4 4 4"></path><path d="M5 5h14"></path></svg>
+            Import
+            <input id="importData" type="file" accept="application/json">
+          </label>
+          <button id="clearData" class="danger-button admin-only" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16"></path><path d="M10 11v6M14 11v6"></path><path d="M6 7l1 14h10l1-14"></path><path d="M9 7V4h6v3"></path></svg>
+            Leeren
+          </button>
+        </div>
+        <p class="save-note">Admin-PIN: <strong>1234</strong></p>
+      </section>
+    </main>
+
+    <dialog id="adminDialog">
+      <form method="dialog" class="dialog-body">
+        <h3>Admin</h3>
+        <label>
+          PIN
+          <input id="adminPin" type="password" inputmode="numeric" autocomplete="current-password">
+        </label>
+        <p id="adminError" class="error-text" role="alert"></p>
+        <div class="dialog-actions">
+          <button value="cancel" class="secondary-action" type="submit">Abbrechen</button>
+          <button id="loginButton" class="primary-action" value="default" type="button">Anmelden</button>
+        </div>
+      </form>
+    </dialog>
+
+    <template id="matchTemplate">
+      <article class="match-card">
+        <div class="match-meta">
+          <span class="time"></span>
+          <button class="delete-match admin-only icon-button small" type="button" aria-label="Spiel loeschen" title="Spiel loeschen">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16"></path><path d="M10 11v6M14 11v6"></path><path d="M6 7l1 14h10l1-14"></path><path d="M9 7V4h6v3"></path></svg>
+          </button>
+        </div>
+        <div class="match-teams"></div>
+        <div class="score-controls admin-only">
+          <button class="score-step minus-a icon-button small" type="button" aria-label="Tor Team A entfernen" title="Tor entfernen">-</button>
+          <input class="score-a" type="number" min="0" inputmode="numeric">
+          <button class="score-step plus-a icon-button small" type="button" aria-label="Tor Team A dazu" title="Tor Team A">+</button>
+          <span>:</span>
+          <button class="score-step minus-b icon-button small" type="button" aria-label="Tor Team B entfernen" title="Tor entfernen">-</button>
+          <input class="score-b" type="number" min="0" inputmode="numeric">
+          <button class="score-step plus-b icon-button small" type="button" aria-label="Tor Team B dazu" title="Tor Team B">+</button>
+        </div>
+      </article>
+    </template>
+
+    <script src="app.js"></script>
+  </body>
+</html>
